@@ -1,6 +1,6 @@
-import { useState } from 'react'
+
 import { RouterProvider} from 'react-router-dom'
-import Router from '../router/index'
+import Router from './router/index'
 import './App.css'
 
 function App() {

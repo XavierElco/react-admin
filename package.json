@@ -4,12 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --mdoe dev",
-    "build": "vite build --mdoe prod",
+    "dev": "vite --mode dev",
+    "build": "vite build --mode prod",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.0.0",
+    "ant-design": "^1.0.0",
     "antd": "^5.22.3",
     "axios": "^1.9.0",
     "mockjs": "^1.1.0",

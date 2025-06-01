@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { message } from 'antd';
 import { AxiosError } from 'axios';
+import env from '../config'
+
+const baseURL = import.meta.env.VITE_BASE_URL // /api
 
 // 创建请求的实例对象
 const instance = axios.create({
-    baseURL: '/api', // 设置基础 URL，所有请求都会以 /api 为前缀
+    baseURL: baseURL, // 设置基础 URL，所有请求都会以 /api 为前缀
     timeout: 3000, // 设置请求超时时间
     timeoutErrorMessage: '请求超时',
     withCredentials: true, // 允许携带凭证
@@ -16,7 +19,13 @@ instance.interceptors.request.use(
         // 从本地存储获取 token
         const token = localStorage.getItem('token')
         if(token) {
-            config.headers.Authorization = `Token::${token}`
+            config.headers.Authorization = token
+        }
+
+        if (import.meta.env.VITE_MOCK === 'true') {
+            config.baseURL = env.mockApi
+        } else {
+            config.baseURL = env.baseApi
         }
         // 返回修改后的配置对象
         return {

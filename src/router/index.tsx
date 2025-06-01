@@ -13,7 +13,7 @@ const router = [
     },
     {
         path: '/login',
-        element:<Welcome/>,
+        element:<Login/>,
     },
     {
         path: '*',
