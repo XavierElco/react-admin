@@ -11,6 +11,9 @@ const instance = axios.create({
     timeout: 3000, // 设置请求超时时间
     timeoutErrorMessage: '请求超时',
     withCredentials: true, // 允许携带凭证
+    headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
 })
 
 // 请求拦截器 - 在发送请求前执行
@@ -43,7 +46,7 @@ instance.interceptors.response.use(
         // 获取响应数据
         const data = response.data
         // 如果 code 为 50001，表示 token 过期，清除 token 并重定向到登录页
-        if (data.code === 50001) {
+        if (data.code === 40001) {
             localStorage.removeItem('token')
             location.href = '/login'
         } else if (data.code !== 200) {
@@ -65,6 +68,6 @@ export default {
         return instance.get(url, { params })
     },
     post<T>(url: string, params?:object): Promise<T> {
-        return instance.post(url, params)
+        return instance.post(url, params )
     }
 }

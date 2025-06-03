@@ -6,21 +6,21 @@ dev: {
     uploadApi: 'http://127.0.0.1:2021',
     cdn: 'http://xxx.aliyun.com',
     mock: true,
-    mockApi: 'https://m1.apifoxmock.com/m1/5503761-5179910-default'
+    mockApi: 'https://m1.apifoxmock.com/m1/5503761-5179910-default/api'
     },
     stg: {
     baseApi: '/api',
     uploadApi: 'http://api-driver-stg.marsview.cc',
     cdn: 'http://xxx.aliyun.com',
     mock: false,
-    mockApi: 'https://m1.apifoxmock.com/m1/5503761-5179910-default'
+    mockApi: 'https://m1.apifoxmock.com/m1/5503761-5179910-default/api'
     },
     prd: {
     baseApi: '/api',
     uploadApi: 'http://api-driver.marsview.cc',
     cdn: 'http://xxx.aliyun.com',
     mock: false,
-    mockApi: 'https://m1.apifoxmock.com/m1/5503761-5179910-default'
+    mockApi: 'https://m1.apifoxmock.com/m1/5503761-5179910-default/api'
     }
 };
 

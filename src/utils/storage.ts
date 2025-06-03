@@ -1,5 +1,5 @@
 export default {
-    set(key: string, value: string | number | object) {
+    set(key: string, value: unknown) {
         localStorage.setItem(key, JSON.stringify(value))
     },
 
