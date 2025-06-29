@@ -1,15 +1,21 @@
 import React from 'react';
 import { Layout} from 'antd';
 import { Outlet } from 'react-router-dom';
-const { Header, Footer, Sider, Content } = Layout;
+const { Sider } = Layout;
 import styles from './index.module.less';
 import NavHeader from './header/index';
 import TheFooter from './footer/index';
+import Menu from './menu/index';
+import { useStore } from '../store/index';
 
 export default function layoutContent() {
-    return (
-    <Layout style={{minHeight: '100vh'}}>
-        <Sider>Sider</Sider>
+    const {collapsed} = useStore();
+
+        return (
+    <Layout style={{minHeight: '100vh'}}>  
+        <Sider trigger={null} collapsible collapsed={collapsed}>
+            <Menu/>
+        </Sider>
         <Layout>
             <NavHeader/>
             <div className={styles.contentContainer}>
