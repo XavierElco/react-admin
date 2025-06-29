@@ -3,10 +3,21 @@ import Login from '../views/Login/login';
 import Welcome from '../views/Welcome/welcome';
 import Error404 from '../views/Error/NotFound404';
 import Error403 from '../views/Error/NoRight403';
+import Layout from '../layout/index';
 
 
 
 const router = [
+    {
+        element: <Layout/>,
+        children: [
+            {
+                path: 'welcome',
+                element:<Welcome/>,
+                errorElement:<Error404/>
+            }
+        ]
+    },
     {
         path: '/',
         element: <Navigate to="/login" replace />,
@@ -33,7 +44,7 @@ const router = [
     {
         path: '/403',
         element: <Error403/>
-    }
+    },
 ]
 
 export default createBrowserRouter(router);
