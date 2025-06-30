@@ -11,21 +11,21 @@ import { useStore } from '../store/index';
 export default function layoutContent() {
     const {collapsed} = useStore();
 
-        return (
-    <Layout style={{minHeight: '100vh'}}>  
-        <Sider trigger={null} collapsible collapsed={collapsed}>
-            <Menu/>
-        </Sider>
-        <Layout>
-            <NavHeader/>
-            <div className={styles.contentContainer}>
-                <div className={styles.content}>
-                    <Outlet/>
+    return (
+        <Layout style={{minHeight: '100vh'}}>  
+            <Sider trigger={null} collapsible collapsed={collapsed} theme="light">
+                <Menu/>
+            </Sider>
+            <Layout className={styles.contentLayout}>
+                <NavHeader/>
+                <div className={styles.contentContainer}>
+                    <div className={styles.content}>
+                        <Outlet/>
+                    </div>
+                    <TheFooter/>
                 </div>
-                <TheFooter/>
-            </div>
+            </Layout>
         </Layout>
-    </Layout>
   
     )
 }
