@@ -13,6 +13,8 @@ import {
 import { useStore } from '../../store/index';
 import type { GetProp, MenuProps } from 'antd';
 type MenuItem = GetProp<MenuProps, 'items'>[number];
+import { useNavigate } from 'react-router-dom';
+
 
 export default function menu() {
     const {collapsed} = useStore();
@@ -32,10 +34,10 @@ export default function menu() {
             icon: <UsergroupAddOutlined />,
             label: '用户模块',
             children: [
-                { key: '/userList', label: '用户列表', icon: <UserOutlined /> },
-                { key: '/menuList', label: '菜单管理', icon: <MailOutlined /> },
-                { key: '/roleList', label: '角色管理', icon: <SolutionOutlined /> },
-                { key: '/deptList', label: '部门管理', icon: <LaptopOutlined /> },
+                { key: '/user/userList', label: '用户列表', icon: <UserOutlined /> },
+                { key: '/user/menuList', label: '菜单管理', icon: <MailOutlined /> },
+                { key: '/user/roleList', label: '角色管理', icon: <SolutionOutlined /> },
+                { key: '/user/deptList', label: '部门管理', icon: <LaptopOutlined />,},
             ]
         },
         {
@@ -45,13 +47,20 @@ export default function menu() {
         }
       ];
 
+      const navigate = useNavigate();
+
+      const menuClick = ({key}: {key: string}) => {
+        navigate(key);
+      }
       return (
+        
         <div className={styles.menuContainer}>
             <div className={styles.logo}>
                 <img src = 'imgs/logo.png' className={styles.img}/>
                 {collapsed ? '' : 'Admin System'}
             </div>
             <Menu
+                onClick={menuClick}
                 theme="light"  // 设置为浅色主题
                 mode="inline"
                 inlineCollapsed={collapsed}
