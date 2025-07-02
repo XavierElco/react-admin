@@ -2,3 +2,31 @@ html, body {
     margin: 0;
     padding: 0;
 }
+.search-form {
+    background-color: var(--white-bg-color);
+    padding: 20px;
+    border-radius: 5px;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.tableWrapper {
+    background-color: var(--white-bg-color);
+    border-radius: 5px;
+    color: #000;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 5px 5px 0 0;
+        color: var(--white-color);
+        padding: 15px;
+        .action {
+            margin-left: 15px;
+        }
+    }
+}
+
+.button {
+    margin-right: 10px;
+}

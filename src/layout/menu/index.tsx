@@ -56,7 +56,7 @@ export default function menu() {
         
         <div className={styles.menuContainer}>
             <div className={styles.logo}>
-                <img src = 'imgs/logo.png' className={styles.img}/>
+                <img src = '/imgs/logo.png' className={styles.img}/>
                 {collapsed ? '' : 'Admin System'}
             </div>
             <Menu
