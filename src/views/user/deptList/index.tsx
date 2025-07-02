@@ -1,63 +1,102 @@
-import styles from './index.module.less';
+
 import { Form, Input, Button } from 'antd';
-import React from 'react';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
-
-interface DataType {
-    key: React.Key;
-    name: string;
-    age: number;
-    address: string;
-    description: string;
-  }
+import api from '../../../api';
+import { useEffect, useState } from 'react';
+import type { IDeptList } from '../../../types/index';
+import { formatDateToChinese } from '../../../utils';
 
 export default function DeptList() {
 
-    const columns: TableColumnsType<DataType> = [
-        { title: 'Name', dataIndex: 'name', key: 'name' },
-        { title: 'Age', dataIndex: 'age', key: 'age' },
-        { title: 'Address', dataIndex: 'address', key: 'address' },
-        {
-          title: 'Action',
-          dataIndex: '',
-          key: 'x',
-          render: () => <a>Delete</a>,
-        },
-      ];
+    const [deptList, setDeptList] = useState<IDeptList[]>([])
 
-    const data: DataType[] = [
-        {
-          key: 1,
-          name: 'John Brown',
-          age: 32,
-          address: 'New York No. 1 Lake Park',
-          description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-        },
-        {
-          key: 2,
-          name: 'Jim Green',
-          age: 42,
-          address: 'London No. 1 Lake Park',
-          description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
-        },
-        {
-          key: 3,
-          name: 'Not Expandable',
-          age: 29,
-          address: 'Jiangsu No. 1 Lake Park',
-          description: 'This not expandable',
-        },
-        {
-          key: 4,
-          name: 'Joe Black',
-          age: 32,
-          address: 'Sydney No. 1 Lake Park',
-          description: 'My name is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park.',
-        },
-      ]; 
+    useEffect(() => {
+        getDept()
+    }, [])  
 
-    
+    // 获取部门列表
+    const getDept = async() => {
+        const data = await api.getDeptList();
+        setDeptList(data)
+    }
+
+    const columns: TableColumnsType<IDeptList> = [
+        {
+            title: '部门名称',
+            dataIndex: 'deptName',
+            key: 'deptName',
+            width: '200',  
+        },
+        {
+            title: '部门负责人',
+            dataIndex: 'userName',
+            key: 'userName',
+            width: '200',  
+        },
+        {
+            title: '创建时间',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            width: '200', 
+            render: (text: string) => {
+                return formatDateToChinese(text)
+            }
+        },
+        {
+            title: '更新时间',
+            dataIndex: 'updateTime',
+            key: 'updateTime',
+            width: '200',  
+            render: (text: string) => {
+                return formatDateToChinese(text)
+            }
+        },
+        {
+            title: '操作',
+            dataIndex: 'action',
+            key: 'action',
+            width: '200',  
+            render: (record: IDeptList) => {
+                return (
+                    <> 
+                        <Button 
+                            variant="outlined" 
+                            className="button" 
+                            color="primary"
+                            onClick={() => handleSubCreate(record._id)}
+                        >新增</Button>
+                        <Button 
+                            variant="outlined" 
+                            className="button" 
+                            color="primary"
+                            onClick={() => handleEdit(record._id)}
+                        >编辑</Button>
+                        <Button 
+                            variant="outlined" 
+                            className="button" 
+                            color="danger" 
+                            onClick={() => handleDelete(record._id)}
+                        >删除</Button>
+                    </>
+                )
+            }
+        }
+    ]
+
+
+    const handleSubCreate = (id: string) => {
+        console.log(id)
+    }
+
+    const handleEdit = (id: string) => {
+        console.log(id)
+    }
+
+    const handleDelete = (id: string) => {
+        console.log(id)
+    }
+
     return (
         <div>
             <Form className="search-form" layout="inline">
@@ -80,13 +119,8 @@ export default function DeptList() {
                         <Button >新增</Button>
                     </div>
                 </div>
-                <Table rowKey="key" columns={columns} dataSource={data}
-                    expandable={{
-                        expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
-                        rowExpandable: (record) => record.name !== 'Not Expandable',
-                    }}
-                />
+                <Table rowKey="_id" columns={columns} dataSource={deptList}/>
             </div>
         </div>
-    )
+    );
 }

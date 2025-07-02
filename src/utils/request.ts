@@ -69,5 +69,11 @@ export default {
     },
     post<T>(url: string, params?:object): Promise<T> {
         return instance.post(url, params )
+    },
+    put<T>(url: string, params?:object): Promise<T> {
+        return instance.put(url, params )
+    },
+    delete<T>(url: string, params?:object): Promise<T> {
+        return instance.delete(url, { params })
     }
 }
