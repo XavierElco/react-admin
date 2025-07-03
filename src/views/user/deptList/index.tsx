@@ -3,15 +3,18 @@ import { Form, Input, Button } from 'antd';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import api from '../../../api';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { IDeptList } from '../../../types/index';
 import { formatDateToChinese } from '../../../utils';
+import CreateDept from './CreateDept';
 
 export default function DeptList() {
 
     const [deptList, setDeptList] = useState<IDeptList[]>([])
 
     const [form] = Form.useForm()
+
+    const deptRef = useRef<{showModal: () => void}>(null)
 
     useEffect(() => {
         getDept()
@@ -91,8 +94,8 @@ export default function DeptList() {
         console.log(id)
     }
 
-    const handleEdit = (id: string) => {
-        console.log(id)
+    const handleEdit = (record: IDeptList) => {
+        deptRef.current?.showModal('edit', record)
     }
 
     const handleDelete = (id: string) => {
@@ -104,6 +107,9 @@ export default function DeptList() {
         getDept()
     }
 
+    const handleCreate = () => {
+        deptRef.current?.showModal();
+    }
 
     return (
         <div>
@@ -124,11 +130,12 @@ export default function DeptList() {
                 <div className="header">
                     <div className="title">部门列表</div>
                     <div className="action">
-                        <Button >新增</Button>
+                        <Button onClick={handleCreate}>新增</Button>
                     </div>
                 </div>
                 <Table rowKey="_id" columns={columns} dataSource={deptList}/>
             </div>
+            <CreateDept mref={deptRef}/>
         </div>
     );
 }
