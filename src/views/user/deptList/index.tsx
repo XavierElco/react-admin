@@ -11,13 +11,15 @@ export default function DeptList() {
 
     const [deptList, setDeptList] = useState<IDeptList[]>([])
 
+    const [form] = Form.useForm()
+
     useEffect(() => {
         getDept()
     }, [])  
 
     // 获取部门列表
     const getDept = async() => {
-        const data = await api.getDeptList();
+        const data = await api.getDeptList(form.getFieldsValue());
         setDeptList(data)
     }
 
@@ -97,17 +99,23 @@ export default function DeptList() {
         console.log(id)
     }
 
+    const handleReset = () => {
+        form.resetFields()
+        getDept()
+    }
+
+
     return (
         <div>
-            <Form className="search-form" layout="inline">
+            <Form className="search-form" layout="inline" form={form}>
                 <Form.Item name="deptName" label="部门名称">
                     <Input placeholder="请输入部门名称" />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" className="button" >
+                    <Button type="primary" className="button" onClick={getDept} >
                         查询
                     </Button>
-                    <Button type="primary" htmlType="submit" >
+                    <Button type="primary" htmlType="submit" onClick={handleReset} >
                         重置
                     </Button>
                 </Form.Item>

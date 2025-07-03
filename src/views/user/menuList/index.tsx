@@ -1,7 +1,9 @@
+import { Form } from "antd";
+
 export default function menuList() {
     return (
         <div>
-            <h1>MenuList</h1>
+            <Form className="search-form" layout="inline"></Form>
         </div>
     )
 }
