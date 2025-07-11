@@ -47,28 +47,42 @@ export default function CreateDept(props: IProps) {
     };
 
     const handleOk = async () => {
-        const valid = form.validateFields();
+
+        const valid = await form.validateFields();
+        console.log('表单验证结果:', valid)
         if (!valid) {
             return;
         }
+
         const params = form.getFieldsValue();
-        if (action === 'create') {
-            await api.createDept(params);
-            message.success('创建部门成功')
-        } else if (action === 'edit') {
-            await api.updateDept(params);
-            message.success('编辑部门成功')
-        }
-        setConfirmLoading(true);
-        setTimeout(() => {
-            setOpen(false);
+
+        try {
+            if (action === 'create') {
+                await api.createDept(params);
+                message.success('创建部门成功')
+            } else if (action === 'edit') {
+                console.log('开始编辑部门');
+                await api.updateDept(params);
+                message.success('编辑部门成功')
+            }
+
+            props.update();
+
+            setConfirmLoading(true);
+            setTimeout(() => {
+                handleCancel();
+                setConfirmLoading(false);
+            }, 2000);
+        } catch (error) {
+            console.error('API 请求失败:', error);
+            message.error('操作失败');
             setConfirmLoading(false);
-        }, 2000);
+        }
     };
 
     const handleCancel = () => {
-        console.log("Clicked cancel button");
         setOpen(false);
+        form.resetFields();
     };
 
     return (

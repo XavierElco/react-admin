@@ -30,5 +30,10 @@ export default {
     // 编辑部门
     updateDept: (params: IDeptList) => {
         return request.post('/dept/edit', params)
+    },
+
+    // 删除部门
+    deleteDept: (id: string) => {
+        return request.post(`/dept/delete`, {_id: id})
     }
 } 

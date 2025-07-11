@@ -36,3 +36,18 @@ export interface IUserList {
     deptName: string;
     userImg: string;
 }
+
+export interface IMenuList {
+    _id: string;
+    menuType: number;
+    menuName: string;
+    path: string;
+    icon: string;
+    orderBy: number;
+    menuState: number;
+    parentId: string;
+    createId: number;
+    createTime: string;
+    updateTime: string;
+    __v: number;
+}

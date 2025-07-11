@@ -8,7 +8,7 @@ const baseURL = import.meta.env.VITE_BASE_URL // /api
 // 创建请求的实例对象
 const instance = axios.create({
     baseURL: baseURL, // 设置基础 URL，所有请求都会以 /api 为前缀
-    timeout: 3000, // 设置请求超时时间
+    timeout: 10000, // 设置请求超时时间
     timeoutErrorMessage: '请求超时',
     withCredentials: true, // 允许携带凭证
     headers: {
@@ -74,6 +74,6 @@ export default {
         return instance.put(url, params )
     },
     delete<T>(url: string, params?:object): Promise<T> {
-        return instance.delete(url, { params })
+        return instance.post(url, { params })
     }
 }

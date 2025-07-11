@@ -1,5 +1,4 @@
-
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Modal, message } from 'antd';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
 import api from '../../../api';
@@ -8,13 +7,13 @@ import type { IDeptList } from '../../../types/index';
 import { formatDateToChinese } from '../../../utils';
 import CreateDept from './CreateDept';
 
-export default function DeptList() {
+export default function DeptList() {     
 
     const [deptList, setDeptList] = useState<IDeptList[]>([])
 
     const [form] = Form.useForm()
 
-    const deptRef = useRef<{showModal: () => void}>(null)
+    const deptRef = useRef<{showModal: (type: string, data?: IDeptList | { parentId: string }) => void}>(null)
 
     useEffect(() => {
         getDept()
@@ -62,7 +61,7 @@ export default function DeptList() {
             dataIndex: 'action',
             key: 'action',
             width: '200',  
-            render: (record: IDeptList) => {
+            render: (_, record: IDeptList) => {
                 return (
                     <> 
                         <Button 
@@ -75,7 +74,7 @@ export default function DeptList() {
                             variant="outlined" 
                             className="button" 
                             color="primary"
-                            onClick={() => handleEdit(record._id)}
+                            onClick={() => handleEdit(record)}
                         >编辑</Button>
                         <Button 
                             variant="outlined" 
@@ -91,15 +90,26 @@ export default function DeptList() {
 
 
     const handleSubCreate = (id: string) => {
-        console.log(id)
+        deptRef.current?.showModal('create', { parentId: id })
     }
 
     const handleEdit = (record: IDeptList) => {
         deptRef.current?.showModal('edit', record)
     }
 
-    const handleDelete = (id: string) => {
-        console.log(id)
+    const handleDelete = (deptId: string) => {
+        Modal.confirm({
+            title: '删除部门',
+            content: '确定要删除该部门吗？',
+            onOk: () => handleDeleteOk(deptId),
+        })
+        
+    }
+
+    const handleDeleteOk = async (id: string) => {
+        await api.deleteDept(id);
+        message.success('删除部门成功'),
+        getDept();
     }
 
     const handleReset = () => {
@@ -108,7 +118,7 @@ export default function DeptList() {
     }
 
     const handleCreate = () => {
-        deptRef.current?.showModal();
+        deptRef.current?.showModal('create');
     }
 
     return (
@@ -135,7 +145,7 @@ export default function DeptList() {
                 </div>
                 <Table rowKey="_id" columns={columns} dataSource={deptList}/>
             </div>
-            <CreateDept mref={deptRef}/>
+            <CreateDept mref={deptRef} update={getDept}/>
         </div>
     );
 }
