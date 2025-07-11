@@ -37,17 +37,42 @@ export interface IUserList {
     userImg: string;
 }
 
-export interface IMenuList {
+export interface IMenuList extends ICreateMenu {
     _id: string;
-    menuType: number;
-    menuName: string;
-    path: string;
-    icon: string;
-    orderBy: number;
-    menuState: number;
-    parentId: string;
-    createId: number;
+    children?: IMenuList[];
     createTime: string;
     updateTime: string;
-    __v: number;
+    buttons?: IMenuList[];
+}
+
+// 编辑菜单
+export interface IEditMenu extends ICreateMenu {
+    _id: string;
+}
+
+// 菜单搜索
+export interface IMenuSearch {
+    menuName: string;
+    menuState: number;
+}
+
+// 创建菜单
+export interface ICreateMenu {
+    menuName: string; // 菜单名称
+    path: string; // 菜单路径
+    menuState: number;
+    parentId: string;
+    orderBy: number;
+    menuType: number; // 菜单类型 1.菜单 2.按钮 3.页面
+    menuCode: string; // 菜单权限表示
+    component: string; // 组件名称
+    icon?: string; // 菜单图标
+
+}
+
+// 更新菜单
+export interface IUpdateMenu {
+    _id: string;
+    menuName: string;
+    path: string;
 }
