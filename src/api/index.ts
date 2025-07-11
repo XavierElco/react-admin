@@ -1,4 +1,13 @@
-import type { ILoginParams, IDeptList, IDeptSearch, IUserList } from "../types/index";
+import type { 
+    ILoginParams, 
+    IDeptList, 
+    IDeptSearch, 
+    IUserList, 
+    IMenuList, 
+    IEditMenu, 
+    ICreateMenu, 
+    IMenuSearch,
+} from "../types/index";
 import request from "../utils/request";
 
 export default {
@@ -35,5 +44,26 @@ export default {
     // 删除部门
     deleteDept: (id: string) => {
         return request.post(`/dept/delete`, {_id: id})
-    }
+    },
+
+    // 获取菜单列表
+    getMenuList: (params?: IMenuSearch) => {
+        return request.get<IMenuList[]>('/menu/list', params)
+    },
+
+    // 创建菜单
+    createMenu: (params: ICreateMenu) => {
+        return request.post('/menu/create', params)
+    },
+
+    // 编辑菜单
+    editMenu: (params: IEditMenu) => {
+        return request.post('/menu/edit', params)
+    },
+
+    // 删除菜单
+    deleteMenu: (id: string) => {
+        return request.post(`/menu/delete`, {_id: id})
+    },
+
 } 

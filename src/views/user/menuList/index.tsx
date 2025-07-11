@@ -1,50 +1,142 @@
 import { Form, Input, Button, Select, Table } from "antd";
-import React from 'react';
+import { useEffect, useState, useRef } from "react";
+import type { IMenuList } from "../../../types";
+import type { TableColumnsType } from 'antd';
+import api from "../../../api";
+import { formatDateToChinese } from "../../../utils";
+import { ConfigProvider, Flex, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import CreateMenu from "./CreateMenu";
+
 
 export default function menuList() {
 
+    const [loading, setLoading] = useState(false)
+
+    const [form] = Form.useForm()
+
+    const [menuList, setMenuList] = useState<IMenuList[]>([])
+
+    const menuRef = useRef<{ showModel: (type: string, data?: IMenuList) => void }>(null)
+
     const getMenu = () => {
-        console.log('查询')
+        getMenuList()
     }
 
     const handleReset = () => {
-        console.log('重置')
+        form.resetFields()
+        getMenuList()
     }
 
-    const dataSource: DataType[] = [
-        { key: '1', name: 'Olivia', age: 32, address: 'New York Park' },
-        { key: '2', name: 'Ethan', age: 40, address: 'London Park' },
-    ];
+    useEffect(() => {
+        setLoading(true)
+        getMenuList()
+    }, [])
 
+    const getMenuList = async () => {
+        const data = await api.getMenuList(form.getFieldsValue())
+        setLoading(false)
+        setMenuList(data)
+    }
 
-    const columns: TableColumnsType<DataType> = [
+    const columns: TableColumnsType<IMenuList> = [
         {
-          title: 'Full Name',
-          width: 100,
-          dataIndex: 'name',
-          fixed: 'left',
+            title: '菜单名称',
+            width: 150,
+            dataIndex: 'menuName',
+            fixed: 'left',
+            key: 'menuName',
         },
         {
-          title: 'Age',
-          width: 100,
-          dataIndex: 'age',
+            title: '菜单图标',
+            width: 100,
+            dataIndex: 'icon',
+            key: 'icon',
         },
-        { title: 'Column 1', dataIndex: 'address', key: '1', fixed: 'left' },
-        { title: 'Column 2', dataIndex: 'address', key: '2' },
-        { title: 'Column 3', dataIndex: 'address', key: '3' },
-        { title: 'Column 4', dataIndex: 'address', key: '4' },
-        { title: 'Column 5', dataIndex: 'address', key: '5' },
-        { title: 'Column 6', dataIndex: 'address', key: '6' },
+        {
+            title: '菜单类型',
+            dataIndex: 'menuType',
+            key: 'menuType',
+            render: (text: string) => {
+                return {
+                    1: '菜单',
+                    2: '按钮',
+                    3: '页面',
+                }[text]
+            }
+        },
+        {
+            title: '权限标识',
+            dataIndex: 'menuCode',
+            key: 'menuCode',
+        },
+        {
+            title: '路由地址',
+            dataIndex: 'path',
+            key: 'path',
+        },
+        {
+            title: '组件名称',
+            dataIndex: 'component',
+            key: 'component',
+        },
+        {
+            title: '创建时间',
+            dataIndex: 'createTime',
+            key: 'createTime',
+            render: (text: string) => formatDateToChinese(text)
+        },
+        {
+            title: '更新时间',
+            dataIndex: 'updateTime',
+            key: 'updateTime',
+            render: (text: string) => {
+                return formatDateToChinese(text)
+            }
+        },
+        {
+            title: '操作',
+            dataIndex: 'action',
+            key: 'action',
+            render: (_, record: IMenuList) => {
+                return <div>
+                    <Button
+                        className="button"
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => handleEdit(record)}
+                    >编辑</Button>
+                    <Button
+                        className="button"
+                        variant="outlined"
+                        color="danger"
+                        onClick={() => handleDelete(record)}
+                    >删除</Button>
+                </div>
+            }
+        },
     ];
+
+    const handleEdit = (record: IMenuList) => {
+        console.log(record)
+    }
+
+    const handleDelete = (record: IMenuList) => {
+        console.log(record)
+    }
+
+    const handleCreate = () => {
+        menuRef.current?.showModel('create')
+    }
 
     return (
         <div>
-            <Form className="search-form" layout="inline">
+            <Form className="search-form" layout="inline" form={form}>
                 <Form.Item name="menuName" label="菜单名称">
                     <Input placeholder="请输入菜单名称" />
                 </Form.Item>
-                <Form.Item name="menuStatus" label="菜单状态">
-                    <Select defaultValue="正常" style={{ width: 100 }}>
+                <Form.Item name="menuStatus" label="菜单状态" initialValue="正常">
+                    <Select style={{ width: 100 }}>
                         <Select.Option value="正常">正常</Select.Option>
                         <Select.Option value="禁用">禁用</Select.Option>
                     </Select>
@@ -53,19 +145,47 @@ export default function menuList() {
                     <Button type="primary" className="button" onClick={getMenu} >
                         搜索
                     </Button>
-                    <Button type="primary" htmlType="submit" onClick={handleReset} >
+                    <Button variant="outlined" htmlType="submit" onClick={handleReset} >
                         重置
                     </Button>
                 </Form.Item>
             </Form>
 
-            <Table
-                bordered
-                columns={columns}
-                dataSource={dataSource}
-                scroll={{ x: 'max-content' }}
-                pagination={false}
-            />
+            {loading ?
+                <Flex align="center" gap="middle" style={{ justifyContent: 'center', alignItems: 'center', height: 'calc(100vh - 250px)' }}>
+                    <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+                </Flex>
+                :
+                <>
+                    <div className="tableWrapper">
+                        <div className="header">
+                            <div className="title">菜单列表</div>
+                            <div className="action">
+                                <Button type="primary" onClick={handleCreate}>新增</Button>
+                            </div>
+                        </div>
+                        <ConfigProvider
+                            theme={{
+                                components: {
+                                    Table: {
+                                        headerBorderRadius: 0, // 设置表格头部圆角，单位是px
+                                    },
+                                },
+                            }}
+                        >
+                            <Table
+                                rowKey="_id"
+                                bordered
+                                columns={columns}
+                                dataSource={menuList}
+                                scroll={{ x: 'max-content' }}
+                                pagination={false}
+                            />
+                        </ConfigProvider>
+                    </div>
+                </>
+            }
+
 
         </div>
     )

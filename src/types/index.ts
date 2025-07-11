@@ -37,6 +37,7 @@ export interface IUserList {
     userImg: string;
 }
 
+// 菜单列表获取
 export interface IMenuList extends ICreateMenu {
     _id: string;
     children?: IMenuList[];
@@ -68,11 +69,4 @@ export interface ICreateMenu {
     component: string; // 组件名称
     icon?: string; // 菜单图标
 
-}
-
-// 更新菜单
-export interface IUpdateMenu {
-    _id: string;
-    menuName: string;
-    path: string;
 }
