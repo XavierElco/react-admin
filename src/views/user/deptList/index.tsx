@@ -17,7 +17,10 @@ export default function DeptList() {
 
     const [form] = Form.useForm()
 
-    const deptRef = useRef<{ showModal: (type: string, data?: IDeptList | { parentId: string }) => void }>(null)
+    const deptRef = useRef<{
+        showModal: (type: string, data?: IDeptList | { parentId: string }) => void,
+        update: () => void
+    }>(null)
 
     useEffect(() => {
         setLoading(true)

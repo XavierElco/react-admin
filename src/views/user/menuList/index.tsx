@@ -1,4 +1,4 @@
-import { Form, Input, Button, Select, Table } from "antd";
+import { Form, Input, Button, Select, Table, Modal, message } from "antd";
 import { useEffect, useState, useRef } from "react";
 import type { IMenuList } from "../../../types";
 import type { TableColumnsType } from 'antd';
@@ -17,11 +17,11 @@ export default function menuList() {
 
     const [menuList, setMenuList] = useState<IMenuList[]>([])
 
-    const menuRef = useRef<{ showModel: (type: string, data?: IMenuList) => void }>(null)
+    const menuRef = useRef<{
+        showModel: (type: string, data?: IMenuList | { parentId: string }) => void,
+        update: () => void
+    }>(null)
 
-    const getMenu = () => {
-        getMenuList()
-    }
 
     const handleReset = () => {
         form.resetFields()
@@ -104,6 +104,12 @@ export default function menuList() {
                         className="button"
                         variant="outlined"
                         color="primary"
+                        onClick={() => handleSubCreate(record._id)}
+                    >新增</Button>
+                    <Button
+                        className="button"
+                        variant="outlined"
+                        color="primary"
                         onClick={() => handleEdit(record)}
                     >编辑</Button>
                     <Button
@@ -117,12 +123,23 @@ export default function menuList() {
         },
     ];
 
-    const handleEdit = (record: IMenuList) => {
-        console.log(record)
+    const handleSubCreate = (id: string) => {
+        menuRef.current?.showModel('create', { parentId: id })
+    }
+
+    const handleEdit = (id: string) => {
+        menuRef.current?.showModel('edit', { parentId: id })
     }
 
     const handleDelete = (record: IMenuList) => {
-        console.log(record)
+        Modal.confirm({
+            title: '确定删除该菜单吗？',
+            onOk: async() => {
+                await api.deleteMenu(record._id)
+                message.success('删除菜单成功')
+                getMenuList()
+            }
+        })
     }
 
     const handleCreate = () => {
@@ -142,7 +159,7 @@ export default function menuList() {
                     </Select>
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" className="button" onClick={getMenu} >
+                    <Button type="primary" className="button" onClick={getMenuList} >
                         搜索
                     </Button>
                     <Button variant="outlined" htmlType="submit" onClick={handleReset} >
@@ -183,9 +200,9 @@ export default function menuList() {
                             />
                         </ConfigProvider>
                     </div>
+                    <CreateMenu mref={menuRef} update={getMenuList} />
                 </>
             }
-
 
         </div>
     )
