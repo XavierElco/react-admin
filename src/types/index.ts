@@ -114,3 +114,12 @@ export interface IPermission {
         halfCheckedKeys: string[];
     };
 }
+
+export interface ResultData<T> {
+    list: T[];
+    page: {
+        total: number | 0;
+        pageNum: number;
+        pageSize: number;
+    };
+}

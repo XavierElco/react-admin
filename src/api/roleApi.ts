@@ -1,4 +1,4 @@
-import { IRoleSearchParams, IPermission, IRoleCreateParams, IRoleEditParams, IRole, ResultData } from '../types/api';
+import type { IRoleSearchParams, IPermission, IRoleCreateParams, IRoleEditParams, IRole, ResultData } from '../types/index';
 import request from '../utils/request';
 
 export default {

@@ -1,18 +1,19 @@
-import { Form, Input, Button, Table, ConfigProvider, Spin, Flex, message, Modal, TableColumnsType } from "antd"
+import { Form, Input, Button, Table, ConfigProvider, Spin, Flex } from "antd"
 import { LoadingOutlined } from "@ant-design/icons"
 import { useState } from "react"
 import type { IRole } from "../../../types"
-import api from "../../../api"
+import api from "../../../api/roleApi"
 import { formatDateToChinese } from "../../../utils/index"
 import { useAntdTable } from "ahooks"
 import type { IRoleSearchParams } from "../../../types"
+import type { TableColumnsType } from "antd"
 
 export default function RoleList() {
 
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm()
 
-
+    
     const getRoleList = ({ current, pageSize }: { current: number; pageSize: number }, formData: IRoleSearchParams) => {
         return api.getRoleList({ ...formData, pageNum: current, pageSize: pageSize }).then((data) => {
             console.log(data);
@@ -26,7 +27,7 @@ export default function RoleList() {
 
     const { tableProps, search } = useAntdTable(getRoleList, {
         form,
-        defaultCurrent: 5,
+        defaultCurrent: 1,
     })
 
     const columns: TableColumnsType<IRole> = [
