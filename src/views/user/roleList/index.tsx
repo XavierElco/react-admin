@@ -1,29 +1,33 @@
 import { Form, Input, Button, Table, ConfigProvider, Spin, Flex, message, Modal, TableColumnsType } from "antd"
 import { LoadingOutlined } from "@ant-design/icons"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import type { IRole } from "../../../types"
 import api from "../../../api"
 import { formatDateToChinese } from "../../../utils/index"
+import { useAntdTable } from "ahooks"
+import type { IRoleSearchParams } from "../../../types"
 
 export default function RoleList() {
 
     const [loading, setLoading] = useState(false);
-    const [roleList, setRoleList] = useState<IRole[]>([]);
+    const [form] = Form.useForm()
 
-    // useEffect(() => {
-    //     getRoleList();
-    //     setLoading(false);
-    // }, [])
 
-    // const getRoleList = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const data = await api.getRoleList(form.getFieldsValue());
-    //         setRoleList(data);
-    //     } catch (error) {
-    //         message.error('获取角色列表失败');
-    //     }
-    // }
+    const getRoleList = ({ current, pageSize }: { current: number; pageSize: number }, formData: IRoleSearchParams) => {
+        return api.getRoleList({ ...formData, pageNum: current, pageSize: pageSize }).then((data) => {
+            console.log(data);
+            setLoading(false);
+            return {
+                list: data.list,
+                total: data.page.total,
+            };
+        });
+    };
+
+    const { tableProps, search } = useAntdTable(getRoleList, {
+        form,
+        defaultCurrent: 5,
+    })
 
     const columns: TableColumnsType<IRole> = [
         {
@@ -54,8 +58,6 @@ export default function RoleList() {
         },
       ];
       
-
-    const [form] = Form.useForm()
     return (
         <>
             <Form className="search-form" layout="inline" form={form}>
@@ -63,10 +65,10 @@ export default function RoleList() {
                     <Input placeholder="请输入角色名称" />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" className="button">
+                    <Button type="primary" className="button" onClick={search.submit}>
                         查询
                     </Button>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" onClick={search.reset}>
                         重置
                     </Button>
                 </Form.Item>
@@ -93,14 +95,7 @@ export default function RoleList() {
                                 },
                             }}
                         >
-                            <Table
-                                rowKey="_id"
-                                bordered
-                                columns={columns}
-                                dataSource={roleList}
-                                scroll={{ x: 'max-content' }}
-                                pagination={false}
-                            />
+                        <Table bordered rowKey="_id" columns={columns} {...tableProps} />
                         </ConfigProvider>
                     </div>
                     {/* <CreateRole mref={roleRef} update={getRoleList} /> */}
