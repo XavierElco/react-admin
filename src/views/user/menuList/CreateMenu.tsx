@@ -1,4 +1,4 @@
-import { Form, Modal, Input, Select, Radio, message } from "antd"
+import { Form, Modal, Input, Radio, message } from "antd"
 import type { IMenuList } from "../../../types"
 import { useEffect, useImperativeHandle, useState } from "react"
 import api from "../../../api"
@@ -114,11 +114,23 @@ export default function CreateMenu(props: IProps) {
                         <Form.Item name="menuName" label="菜单名称" rules={[{ required: true, message: '请输入菜单名称' }]}>
                             <Input placeholder="请输入菜单名称" />
                         </Form.Item>
-                        <Form.Item name="icon" label="菜单图标" >
-                            <Input placeholder="请输入菜单图标" />
-                        </Form.Item>
-                        <Form.Item name="path" label="路由地址" >
-                            <Input placeholder="请输入路由地址" />
+                        <Form.Item noStyle shouldUpdate>
+                            {() => {
+                                return form.getFieldValue('menuType') === '2' ? (
+                                    <>
+                                        <Form.Item name="menuCode" label="标识权限" >
+                                            <Input placeholder="请输入标识权限" />
+                                        </Form.Item>
+                                    </>
+                                ) : <>
+                                    <Form.Item name="iceon" label="菜单图标" >
+                                        <Input placeholder="请输入菜单图标" />
+                                    </Form.Item>
+                                    <Form.Item name="path" label="路由地址" >
+                                        <Input placeholder="请输入路由地址" />
+                                    </Form.Item>
+                            </>
+                            }}
                         </Form.Item>
                         <Form.Item name="component" label="组件名称" >
                             <Input placeholder="请输入组件名称" />

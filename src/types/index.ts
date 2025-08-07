@@ -70,3 +70,47 @@ export interface ICreateMenu {
     icon?: string; // 菜单图标
 
 }
+
+// 分页设置
+export interface IPageParams {
+    pageNum: number;
+    pageSize: number;
+}
+
+// 角色模块
+export interface IRole {
+    _id: string;
+    roleName: string;
+    remark: string;
+    permissionList: {
+        checkedKeys: string[];
+        halfCheckedKeys: string[];
+    };
+    createTime: string;
+    updateTime: string;
+}
+
+// 角色搜索参数
+export interface IRoleSearchParams extends IPageParams {
+    roleName?: string;
+}
+
+// 角色创建参数
+export interface IRoleCreateParams {
+    roleName: string;
+    remark: string;
+}
+
+// 角色编辑参数
+export interface IRoleEditParams extends IRoleCreateParams {
+    _id: string;
+}
+
+// 权限模块
+export interface IPermission {
+    _id: string;
+    permissionList: {
+        checkedKeys: string[];
+        halfCheckedKeys: string[];
+    };
+}

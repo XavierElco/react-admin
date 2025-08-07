@@ -9,7 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import CreateMenu from "./CreateMenu";
 
 
-export default function menuList() {
+export default function MenuList() {
 
     const [loading, setLoading] = useState(false)
 
@@ -110,7 +110,7 @@ export default function menuList() {
                         className="button"
                         variant="outlined"
                         color="primary"
-                        onClick={() => handleEdit(record)}
+                        onClick={() => handleEdit(record._id)}
                     >编辑</Button>
                     <Button
                         className="button"
@@ -134,7 +134,7 @@ export default function menuList() {
     const handleDelete = (record: IMenuList) => {
         Modal.confirm({
             title: '确定删除该菜单吗？',
-            onOk: async() => {
+            onOk: async () => {
                 await api.deleteMenu(record._id)
                 message.success('删除菜单成功')
                 getMenuList()

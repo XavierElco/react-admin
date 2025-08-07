@@ -7,6 +7,7 @@ import type {
     IEditMenu, 
     ICreateMenu, 
     IMenuSearch,
+    IRoleSearchParams,
 } from "../types/index";
 import request from "../utils/request";
 
@@ -66,4 +67,8 @@ export default {
         return request.post(`/menu/delete`, {_id: id})
     },
 
+    // 获取角色
+    getRoleList: (params?: IRoleSearchParams) => {
+        return request.get('/roles/list', params);
+    },
 } 
