@@ -1,14 +1,22 @@
-import { Form, Input, Button, Table, ConfigProvider, Spin, Flex } from "antd"
+import { Form, Input, Button, Table, ConfigProvider, Spin, Flex, message, Modal } from "antd"
 import { LoadingOutlined } from "@ant-design/icons"
-import { useState } from "react"
+import { useState, useRef } from "react"
 import type { IRole } from "../../../types"
 import api from "../../../api/roleApi"
 import { formatDateToChinese } from "../../../utils/index"
 import { useAntdTable } from "ahooks"
 import type { IRoleSearchParams } from "../../../types"
 import type { TableColumnsType } from "antd"
+import CreateRole from "./CreateRole"
+
+
+
 
 export default function RoleList() {
+
+    const roleRef = useRef<{
+        showModal: (type: string, data?: IRole | { parentId: string }) => void
+    }>(null)
 
     const [loading, setLoading] = useState(false);
     const [form] = Form.useForm()
@@ -28,6 +36,7 @@ export default function RoleList() {
     const { tableProps, search } = useAntdTable(getRoleList, {
         form,
         defaultCurrent: 1,
+        defaultPageSize: 5,
     })
 
     const columns: TableColumnsType<IRole> = [
@@ -57,8 +66,48 @@ export default function RoleList() {
                 return formatDateToChinese(text);
             },
         },
-      ];
-      
+        {
+            title:'操作',
+            key: 'action',
+            render: (text, record) => {
+                return (
+                    <>
+                        <Button variant="link" color="default" onClick={() => handleEdit(record)}>编辑</Button>
+                        <Button variant="link" color="default" onClick={() => handleSetPermission(record)}>设置权限</Button>
+                        <Button variant="link" color="danger" onClick={() => handleDelete(record._id)}>删除</Button>
+                    </>
+                )
+            }
+
+        }
+    ];
+    
+
+    const handleCreate = () => {
+        roleRef.current?.showModal('create');
+    }
+
+    const handleEdit = (record: IRole) => {
+        roleRef.current?.showModal('edit', record);
+    }
+
+    const handleDelete = (id: string) => {
+        Modal.confirm({
+            title: '确定删除该角色吗？',
+            onOk: () => {
+                api.deleteRole({ _id: id }).then(() => {
+                    message.success('删除成功');
+                    search.submit();
+                })
+            }
+        })
+    }
+
+    const handleSetPermission = (record: IRole) => {
+        console.log(record);
+    }
+
+
     return (
         <>
             <Form className="search-form" layout="inline" form={form}>
@@ -84,7 +133,7 @@ export default function RoleList() {
                         <div className="header">
                             <div className="title">菜单列表</div>
                             <div className="action">
-                                <Button type="primary" >新增</Button>
+                                <Button type="primary" onClick={handleCreate}>新增</Button>
                             </div>
                         </div>
                         <ConfigProvider
@@ -99,7 +148,8 @@ export default function RoleList() {
                         <Table bordered rowKey="_id" columns={columns} {...tableProps} />
                         </ConfigProvider>
                     </div>
-                    {/* <CreateRole mref={roleRef} update={getRoleList} /> */}
+                    {/* 创建角色 */}
+                    <CreateRole mref={roleRef} update={search.submit} />
                 </>
             }
         </>
