@@ -8,6 +8,10 @@ import type {
     ICreateMenu, 
     IMenuSearch,
     IRoleSearchParams,
+    ResultData,
+    IUserSearchParams,
+    ICreateUserParams,
+    IUpdateUserParams,
 } from "../types/index";
 import request from "../utils/request";
 
@@ -23,8 +27,8 @@ export default {
     },
 
     // 获取用户列表信息
-    getUserList: () => {
-        return request.get<IUserList[]>('/users/list')
+    getUserList: (params?: IUserSearchParams) => {
+        return request.get<ResultData<IUserList>>('/users/list', params)
     },
 
     // 获取所有用户信息
@@ -71,4 +75,18 @@ export default {
     getRoleList: (params?: IRoleSearchParams) => {
         return request.get('/roles/list', params);
     },
+
+    // 创建用户
+    createUser(params: ICreateUserParams) {
+        return request.post('/users/create', params);
+    },
+    // 创建用户
+    editUser(params: IUpdateUserParams) {
+        return request.post('/users/edit', params);
+    },
+    // 删除和批量删除用户
+    delUser(params: { userIds: number[] }) {
+        return request.post('/users/delete', params);
+    },
+
 } 
